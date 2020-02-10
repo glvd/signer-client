@@ -1,0 +1,62 @@
+version: "2"
+
+services:
+  eth:
+    build:
+      context: ./eth
+    container_name: eth
+    volumes: 
+      - ./eth/config/genesis.json:/root/.ethereum/config/genesis.json
+      - ./eth/config/static-nodes.json:/root/.ethereum/static-nodes.json
+      - ./eth/init.sh:/root/.ethereum/init.sh
+      - ./eth/keystore:/root/.ethereum/keystore
+      - ./eth/password:/root/.ethereum/password
+      - ./node:/root/.ethereum
+
+    ports: 
+      - "8545:8545"
+      - "30303:30303"
+      - "8546:8546"
+    network_mode: "host"
+
+  ipfs02:
+    build:
+      context: ./ipfs
+    container_name: ipfs02
+    volumes:
+      - ./ipfs/init.sh:/root/ipfs_repo/init.sh
+      - ./repo:/root/ipfs_repo
+    ports:
+      - "4001:4001"
+      - "5001:5001"
+    network_mode: "host"
+
+  relayer:
+    build:
+      context: ./relayer
+    container_name: relayer
+    volumes:
+      - ./node:/root/.ethereum
+    ports:
+      - "8090:8090"
+    network_mode: "host"
+    env_file:
+      - .env
+    depends_on:
+      - eth
+      - ipfs02
+
+  signer:
+    build:
+      context: ./signer
+    container_name: signer
+    volumes:
+      - ./repo:/root/ipfs_repo
+      - ./node:/root/.ethereum
+    network_mode: "host"
+    restart: on-failure
+    env_file:
+      - .env
+    depends_on:
+      - ipfs02
+      - eth

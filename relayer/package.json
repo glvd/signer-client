@@ -1,0 +1,21 @@
+  {
+    "name": "relayer",
+    "version": "1.0.0",
+    "description": "",
+    "main": "client.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "@openzeppelin/network": "^0.2.10",
+      "ethereumjs-wallet": "^0.6.3",
+      "web3": "^1.2.2",
+      "@openzeppelin/contracts-ethereum-package": "^2.3.0",
+      "@openzeppelin/gsn-helpers": "^0.1.9",
+      "@openzeppelin/upgrades": "^2.5.3"
+    }
+  }
+
+  
